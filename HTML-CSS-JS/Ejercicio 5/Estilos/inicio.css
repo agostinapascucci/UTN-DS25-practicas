@@ -1,0 +1,123 @@
+/*#contenedor {
+    width: 1280px;
+    height: 720px;   
+}
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.italiana-regular {
+  font-family: "Italiana", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: white;
+}
+
+header {
+    margin-top: 0.1em;
+    height: 7.5em;
+    background-image: linear-gradient(rgba(0, 0, 100, 0.5), rgba(10, 42, 250, 0.5)), url(../Imagenes/portada.png);
+    background-repeat: repeat;   
+    justify-content: center;
+    
+}
+
+header h1{
+    font-size: 5em;
+    text-align: center;
+}
+
+header img {
+    width: 6.8em;
+    height: 6.3em;
+    border-radius: 100%;
+    position: relative;
+    top: -5.5em;
+    left: 2em;
+    opacity: 80%;
+}
+
+menu {
+    width: 10%;
+    height: 30em;
+    background-color: #8EC0DF;
+    float: left;
+
+}
+menu a {
+    display: block;
+    padding: 0.2em;
+    margin: 0.5em;
+    color: #FFFFEE
+}
+.contenido-principal {
+    margin-left: 0.5em;
+    width: 89.5%;
+    height: 30em;
+    background-color: #DCB7AE;
+    float: right;
+}
+.seccion {
+    width: 20%;
+    height: 450px;
+    background-color: #D9D9D9;
+    display: block;
+    border-radius: 10%;
+    display: block;
+    padding: 0.2em;
+    margin: 1em;
+    justify-content: center;
+
+}
+
+#cienciaficcion{
+    position: relative;
+    top: 3px;
+}
+
+#novelahist {
+    position: relative;
+    top: -470px;
+    left: 22%;
+}
+
+#fantasia {
+    position: relative;
+    top: -943px;
+    left: 44%;
+}
+
+#desarrolloper {
+    position: relative;
+    top: -1415px;
+    left: 66%;
+}
+footer {
+    background-image: radial-gradient(rgba(115, 153, 177, 100), rgba(0, 0, 100, 100));
+    clear: both;
+    color: #D9D9D9;
+    height: 3em;
+    text-align: center;
+    padding: 0.2em;
+}
+
+footer p {
+    position: relative;
+}
+
+#derechos {
+    right: 30em;
+    top: 1em;
+}
+
+#red {
+    top: 0.3em;
+}
+
+#terminos {
+    top: -2em;
+    left: 30em;
+}
