@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Estilos/registro.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
+    <title>Registracion</title>
+</head>
+<body>
+    <div id="contenedor">
+        <header>
+            <h1 class="italiana-regular">Cinderella Books</h1>
+            <h4 class="italiana-regular">Registración</h4>
+            <img src="Imagenes/logo.jpg" alt="logo">
+        </header>
+        <menu class="italiana-regular">
+            <a href="libreria.html" target="_self">Inicio</a>
+            <a href="ciencia.html" target="_self">Ciencia Ficción</a>
+            <a href="historica.html" target="_self">Novela Histórica</a>
+            <a href="desarrollo.html" target="_self">Desarrollo Personal</a>
+            <a href="fantasia.html" target="_self">Fantasía</a>
+            <a href="registracion.html" target="_self">Registración</a>
+            <a href="contacto.html" target="_self">Contacto</a>
+        </menu>
+        <div class="contenido-principal">
+            <form action="" id="formRegistro">
+                <div class="nombre-contenedor">
+                    <label for="nombre">Nombre: </label>
+                    <input id="nombre" type="text">
+                    <br>
+                </div>
+                <div class="apellido-contenedor">
+                    <label for="apellido">Apellido: </label>
+                    <input id="apellido" type="text">
+                    <br>
+                </div>
+                <div class="email-contenedor">
+                    <label for="email">Email: </label>
+                    <input id="email" type="email">
+                    <br>
+                </div>
+                <div class="contra-contenedor">
+                    <label for="contra">Contraseña: </label>
+                    <input type="password" id="contra">
+                    <br>
+                </div>
+                <div class="sexo-contenedor">
+                    <label for="femenino">Femenino</label>
+                    <input type="radio" name="sexo" id="femenino">
+                    <br>
+                    <label for="masculino">Masculino</label>
+                    <input type="radio"  name="sexo" id="masculino">
+                </div>
+                <div class="tema-contenedor">
+                    <label for="tema">Tema Favorito: </label>
+                    <select id="tema">
+                        <option value="CF">Ciencia Ficcion</option>
+                        <option value="NV">Novela Historica</option>
+                        <option value="F">Fantasia</option>
+                        <option value="DP">Desarrollo Personal</option>
+                    </select>
+                </div>
+                <button type="submit">Enviar</button>
+
+            </form>
+        </div>
+        <footer class="italiana-regular">
+            <p id="derechos">Todos los derechos reservados.</p>
+            <p id="red">Instagram: @cinderellabooks_</p>
+            <p id="terminos"><a href="">Terminos y condiciones</a></p>
+        </footer>
+    </div>
+    
+</body>
+</html>

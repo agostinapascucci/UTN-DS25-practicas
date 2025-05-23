@@ -35,6 +35,12 @@ header h1 {
     text-align: center;
 }
 
+header h4{
+    font-size: 2rem;
+    text-align: center;
+    opacity: 50%;
+}
+
 header img {
     width: 5rem;
     height: 5rem;
@@ -55,7 +61,7 @@ menu {
     background-color: var(--primary-color);
     padding: 1rem;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    height: 600px;
+    height: 1122px;
     position: absolute;
     overflow-y: auto;
 
@@ -82,14 +88,14 @@ menu a:hover {
     padding: 1rem;
     background-color: var(--secondary-color);
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     align-items: start;
     margin-left: clamp(150px, 15%, 200px);
     min-height: calc(100vh - 10.5em); /* Ajustar según altura de header y footer */
 }
 
-.seccion {
+.libro {
     background-color: var(--section-bg);
     border-radius: 0.8rem;
     padding: 1.2rem;
@@ -102,7 +108,7 @@ menu a:hover {
     color: #0e1289;
 }
 
-.seccion:hover {
+.libro:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -128,7 +134,7 @@ footer {
     margin: 0.5rem;
 }
 
-.seccion img {
+.libro img {
     max-width:200px;
     max-height: 300px;
     margin: 0.5em;
@@ -140,6 +146,22 @@ footer {
     font-weight: lighter;
 }
 
-.seccion a{
+.libro a{
     text-decoration: none;
+}
+
+#cienciaBack {
+    background-color: #8edfa8;
+}
+
+#desarrolloBack {
+    background-color: #dc8c8c;
+}
+
+#historicaBack {
+    background-color: #926bbd;
+}
+
+#fantasiaBack {
+    background-color: #dc88c7;
 }
