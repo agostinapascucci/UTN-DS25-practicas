@@ -35,6 +35,12 @@ header h1 {
     text-align: center;
 }
 
+header h4{
+    font-size: 2rem;
+    text-align: center;
+    opacity: 50%;
+}
+
 header img {
     width: 5rem;
     height: 5rem;

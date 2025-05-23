@@ -45,17 +45,19 @@ header img {
     opacity: 0.8;
 }
 
-.main-container {
-    display: relative;
-    width: 100%;
+header h4{
+    font-size: 2rem;
+    text-align: center;
+    opacity: 50%;
 }
+
 
 menu {
     width: 200px;
     background-color: var(--primary-color);
     padding: 1rem;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    height: 645px;
+    height: 562px;
     position: absolute;
     overflow-y: auto;
 
@@ -88,59 +90,67 @@ menu a:hover {
     align-items: start;
 }
 
-#formRegistro {
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.contacto-info {
+    background-color: var(--section-bg);
+    padding: 20px;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: block;
+    margin: 1rem;
+}
+
+.contacto-info h2 {
+    color: #0e1289;
+    font-weight: 900;
+}
+
+.contacto-info p {
+    margin: 8px 0;
+    color: #555;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.form-seccion{
     background-color: var(--section-bg);
     padding: 2rem;
     border-radius: 1rem;
     width: 100%;
     max-width: 500px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 1em;
+    color: #555;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
-
-.nombre-contenedor,
-.apellido-contenedor,
-.email-contenedor,
-.contra-contenedor,
-.sexo-contenedor,
-.tema-contenedor {
+.form-seccion h2 {
+    color: #0e1289;
+    font-weight: 900;
+}
+.form-group {
     margin-bottom: 1.5rem;
 }
 
-#formRegistro label {
+.form-seccion label, button {
     display: inline-block;
     margin-bottom: 0.5rem;
     min-width: 100px;
+    font-weight: bold;
 }
 
-#formRegistro input[type="text"],
-#formRegistro input[type="email"],
-#formRegistro input[type="password"],
-#formRegistro select {
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group textarea
+ {
     width: calc(100% - 120px);
     padding: 0.5rem;
     border-radius: 4px;
     border: 1px solid #0e1289;
     background-color: #8EC0DF;
-}
-
-.sexo-contenedor {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.sexo-contenedor label {
-    margin-right: 1rem;
-}
-
-.sexo-contenedor input[type="radio"] {
-    margin-right: 0.5rem;
-    width: 20px;
-    height: 20px;
-}
-
-.tema-contenedor select {
-    width: calc(100% - 120px);
+    display: block;
 }
 
 button[type="submit"] {

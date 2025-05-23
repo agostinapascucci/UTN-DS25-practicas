@@ -13,6 +13,7 @@
     <div id="contenedor">
         <header>
             <h1 class="italiana-regular">Cinderella Books</h1>
+            <h4 class="italiana-regular">Contacto</h4>
             <img src="Imagenes/logo.jpg" alt="logo">
         </header>
         <menu class="italiana-regular">
@@ -25,53 +26,34 @@
             <a href="contacto.html" target="_self">Contacto</a>
         </menu>
         <div class="contenido-principal">
-            <div class="seccion" id="cienciaficcion">
-                <a href="ciencia.html" target="_self"><h4>Titulo: 'Farenheit 451'</h4></a>
-                <br>
-                <img src="Imagenes/frenheit.jpg" alt="Portada de Farenheit 451">
-                <br>
-                <p><b>Autor:</b> Ray Bradbury</p>
-                <br>
-                <p class="descripcion">
-                    <b>Descripcion: </b>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam rem accusamus explicabo animi ratione atque incidunt corrupti porro earum harum quam dolores aliquid molestiae, autem magni! Quis cum amet sunt!
-                </p>
+
+            <div class="contacto-info">
+            <h2  class="italiana-regular">Información de contacto</h2>
+            <p class="italiana-regular"><strong>Dirección:</strong>Av. del Petroleo Argentino 417, B1924 Berisso, Provincia de Buenos Aires</p>
+            <p class="italiana-regular"><strong>Teléfono:</strong> +54 11 1234 5678</p>
+            <p class="italiana-regular"><strong>Email:</strong> cinderellabooks@gmail.com</p>
             </div>
-            <div class="seccion" id="novelahist">
-                <a href="historica.html" target="_self"><h4>Titulo: 'Malinche'</h4></a>
-                <br>
-                <img src="Imagenes/malinche.jpg" alt="Portada de Malinche">
-                <br>
-                <p><b>Autor:</b> Laura Esquivel</p>
-                <br>
-                <p class="descripcion">
-                    <b>Descripcion: </b>
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab eveniet iste corrupti temporibus, saepe odio fugiat consequuntur. Quas mollitia officia fugit corporis. Dolorem, dolor deleniti porro deserunt nihil voluptatum culpa!
-                </p>
-            </div>
-            <div class="seccion" id="fantasia">
-                <a href="fantasia.html" target="_self"><h4>Titulo: 'El nombre del viento'</h4></a>
-                <br>
-                <img src="Imagenes/el-nombre-del-viento-cronica-del-asesino-de-reyes-1.jpg" alt="Portada de El nombre del viento">
-                <br>
-                <p><b>Autor:</b> Patrick Rothfuss</p>
-                <br>
-                <p class="descripcion">
-                    <b>Descripcion: </b>
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab eveniet iste corrupti temporibus, saepe odio fugiat consequuntur. Quas mollitia officia fugit corporis. Dolorem, dolor deleniti porro deserunt nihil voluptatum culpa!
-                </p>
-            </div>
-            <div class="seccion" id="desarrolloper">
-                <a href="desarrollo.html" target="_self"><h4>Titulo: 'Siddhartha'</h4></a>
-                <br>
-                <img src="Imagenes/siddharta.jpg" alt="Portada de Siddhartha">
-                <br>
-                <p><b>Autor:</b> Hermann Hesse</p>
-                <br>
-                <p class="descripcion">
-                    <b>Descripcion: </b>
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab eveniet iste corrupti temporibus, saepe odio fugiat consequuntur. Quas mollitia officia fugit corporis. Dolorem, dolor deleniti porro deserunt nihil voluptatum culpa!
-                </p>
+
+            <div class="form-seccion">
+            <h2 class="italiana-regular">Envíanos un mensaje</h2>
+            <form action="#" method="post">
+                <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required />
+                </div>
+
+                <div class="form-group">
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email" required />
+                </div>
+
+                <div class="form-group">
+                <label for="mensaje">Mensaje:</label>
+                <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+                </div>
+
+                <button type="submit">Enviar</button>
+            </form>
             </div>
         </div>
         <footer class="italiana-regular">
