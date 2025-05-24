@@ -1,0 +1,80 @@
+* {
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin:0;
+    padding: 0;
+}
+.contenedor {
+    margin: 1em;
+    width:50em;
+    border: 3px solid #005187;
+    border-radius: 10px;
+
+}
+.datosPersonales, .header {
+    background-color: #005187;
+    color: #c4dafa;
+    padding: 1em;
+    text-align: center;
+}
+
+.datosPersonales p {
+    margin: 0.5em;
+}
+
+.datosPersonales a, .header a {
+     color: #c4dafa;
+     font-weight: lighter;
+}
+
+
+
+hr{
+    height: 0.5em;
+    background-color: #c4dafa;
+    border-color: #005187;
+    border-left: 0;
+    clear: both;
+}
+
+.objetivoPersonal, 
+.perfil, 
+.links, 
+.formacion,
+.habilidades,
+.idiomas,
+.experiencia,
+.proyectos,
+.crossfit {
+    background-color: #84bbf4;
+    color:#014979;
+    padding: 1em;
+}
+
+.objetivoPersonal {
+    float: left;
+    width: 22.9em;;
+    height: 8em;
+    border-right: 1px solid #005187;
+}
+.perfil{
+    float:left;
+    width: 23em;
+    height: 8em;
+}
+.links{
+    clear: both;
+    padding: 2em;
+}
+
+.links a{
+    text-decoration: none;
+    color: #014979;
+}
+
+.formacion ul,
+.habilidades ul, 
+.experiencia ul,
+.proyectos ul {
+    padding: 1em;
+}
+
