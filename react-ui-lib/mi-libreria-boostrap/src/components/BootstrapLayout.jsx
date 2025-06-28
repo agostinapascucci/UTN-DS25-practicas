@@ -1,4 +1,12 @@
-export function BootstrapLayout({ logo, tituloSeccion, children }) {
+import React from "react";
+
+export function BootstrapLayout ({
+  logo,
+  tituloSeccion,
+  barraBusqueda,
+  resultados,
+  destacados
+}) {
   return (
     <div className="d-flex flex-column min-vh-100">
       {/* Header */}
@@ -69,50 +77,20 @@ export function BootstrapLayout({ logo, tituloSeccion, children }) {
         </div>
       </nav>
 
-      {/* Main Content */}
+
+      {/* Barra de búsqueda */}
+      <div className="mb-4">{barraBusqueda}</div>
+
+            {/* Main Content */}
       <main className="flex-grow-1 py-4">
         <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <div className="bg-white rounded shadow-sm p-4">
-                <h2 className="h3 mb-4 pb-2 border-bottom border-primary text-dark">
-                  <i className="bi bi-star-fill text-warning me-2"></i>
-                  {tituloSeccion}
-                </h2>
-                {children}
-              </div>
-            </div>
-          </div>
+        {/* Resultados */}
+          <div className="mb-4">{resultados}</div>
+
+          {/* Libros destacados */}
+          <div className="mb-4">{destacados}</div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-dark text-light py-4 mt-auto">
-        <div className="container">
-          <div className="row text-center">
-            <div className="col-md-4 mb-2">
-              <p className="mb-0">
-                <i className="bi bi-c-circle me-1"></i>
-                Todos los derechos reservados.
-              </p>
-            </div>
-            <div className="col-md-4 mb-2">
-              <p className="mb-0">
-                <i className="bi bi-instagram me-1"></i>
-                Instagram: @cinderellabooks_
-              </p>
-            </div>
-            <div className="col-md-4 mb-2">
-              <p className="mb-0">
-                <i className="bi bi-file-text me-1"></i>
-                <a href="#" className="text-light text-decoration-none">
-                  Términos y condiciones
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
-  )
-}
+  );
+};

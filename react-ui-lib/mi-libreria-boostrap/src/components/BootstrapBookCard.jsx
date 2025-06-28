@@ -1,4 +1,4 @@
-export function BootstrapBookCard({ id, titulo, autor, imagen }) {
+export function BootstrapBookCard({ id, titulo, autor, imagen, genero }) {
   return (
     <div className="col">
       <div className="card h-100 shadow-sm border-0 book-card">
@@ -18,6 +18,9 @@ export function BootstrapBookCard({ id, titulo, autor, imagen }) {
           <p className="card-text text-muted mb-3">
             <i className="bi bi-person me-2"></i>
             <strong>Autor:</strong> {autor}
+          </p>
+          <p className="card-text text-muted mb-3">
+              <i class="bi bi-bookmark-star-fill"></i> Género: {genero}
           </p>
           <div className="mt-auto">
             <button className="btn btn-outline-primary btn-sm me-2">
