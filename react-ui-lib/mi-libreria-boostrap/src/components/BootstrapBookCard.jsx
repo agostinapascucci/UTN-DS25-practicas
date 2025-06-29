@@ -20,7 +20,7 @@ export function BootstrapBookCard({ id, titulo, autor, imagen, genero }) {
             <strong>Autor:</strong> {autor}
           </p>
           <p className="card-text text-muted mb-3">
-              <i class="bi bi-bookmark-star-fill"></i> Género: {genero}
+              <i className="bi bi-bookmark-star-fill"></i> Género: {genero}
           </p>
           <div className="mt-auto">
             <button className="btn btn-outline-primary btn-sm me-2">

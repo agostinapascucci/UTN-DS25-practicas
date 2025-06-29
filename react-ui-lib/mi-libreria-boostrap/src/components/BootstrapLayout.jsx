@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export function BootstrapLayout ({
   logo,
@@ -23,6 +24,7 @@ export function BootstrapLayout ({
             </div>
             <div className="col text-center">
               <h1 className="display-4 mb-0 fw-bold">Cinderella Books</h1>
+              <p>{tituloSeccion}</p>
             </div>
             <div className="col-auto">{/* Spacer for symmetry */}</div>
           </div>
@@ -38,39 +40,14 @@ export function BootstrapLayout ({
           <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <a className="nav-link fw-semibold px-3" href="#" target="_self">
+                <Link className="nav-link fw-semibold px-3" to="/">
                   <i className="bi bi-house-door me-1"></i>Inicio
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link fw-semibold px-3" href="#" target="_self">
-                  <i className="bi bi-rocket me-1"></i>Ciencia Ficción
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link fw-semibold px-3" href="#" target="_self">
-                  <i className="bi bi-clock-history me-1"></i>Novela Histórica
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link fw-semibold px-3" href="#" target="_self">
-                  <i className="bi bi-person-check me-1"></i>Desarrollo Personal
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link fw-semibold px-3" href="#" target="_self">
-                  <i className="bi bi-magic me-1"></i>Fantasía
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link fw-semibold px-3" href="#" target="_self">
-                  <i className="bi bi-person-plus me-1"></i>Registración
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link fw-semibold px-3" href="#" target="_self">
-                  <i className="bi bi-envelope me-1"></i>Contacto
-                </a>
+                <Link className="nav-link" to="/agregar">
+                  <i className="bi bi-plus-circle me-1"></i> Añadir Libro
+                </Link>
               </li>
             </ul>
           </div>
