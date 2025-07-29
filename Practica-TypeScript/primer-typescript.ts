@@ -74,3 +74,71 @@ function createHero(input: HeroBasicInfo): Hero {
 
 const Superman = createHero(hero);
 Superman.powerScale = "planetary"; // Asignación de un valor a la propiedad opcional
+
+// Type Indexing
+type HeroPropertiesIndex = {
+	isActive: boolean,
+	address: {
+		planet: string,
+		city: string,
+	}
+}
+
+const adressHero: HeroPropertiesIndex['address'] = {
+	planet: 'Earth',
+	city: 'Madrid'
+}
+
+// Type con Constants
+const address = {
+	planet: 'Earth',
+	city: 'Madrid'
+}
+
+type Address = typeof address 
+
+//Type form function return
+function createAddress() {
+	return {
+		planet: 'Tierra',
+		city: 'Barcelona'
+	}
+}
+type AddressR = ReturnType<typeof createAddress>
+
+// Arrays 
+
+const languages: string[] = ['JavaScript', 'TypeScript', 'Python']; // Array de Strings
+const numbers: Array<number> = [1, 2, 3, 4, 5]; // Array de Números, otra forma de definir un array
+
+// Agregar un elemento al array
+languages.push('Java');
+
+// Agregar más de un tipo de dato al array
+const mixedArray: (string | number)[] = ['JavaScript', 42, 'TypeScript', 100];
+
+// Se pueden crear arrays con tus propios tipos
+const heroesWBI : HeroBasicInfo[] = []
+
+// Crear matrices
+const matrix: number[][] = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+];
+
+type CellValue = 'X' | 'O' | null;
+type GameBoard = [
+    [CellValue, CellValue, CellValue],
+    [CellValue, CellValue, CellValue],
+    [CellValue, CellValue, CellValue]
+]
+
+const ticTacToeBoard: GameBoard = [
+    ['X', null, 'O'],
+    [null, 'X', null],
+    [null, 'O', 'X']
+];
+
+// Tuplas
+const heroTuple: [string, number, HeroPowerScale] = ['Superman', 30, 'planetary'];
