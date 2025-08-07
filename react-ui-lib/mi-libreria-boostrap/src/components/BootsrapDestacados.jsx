@@ -1,8 +1,9 @@
-
 import { BootstrapBookCard } from "./BootstrapBookCard"
 
 
-export function BootstrapDestacados({destacados}) {
+export function BootstrapDestacados({ destacados }) {
+  const libros = destacados.books || [];
+
   return (
     <>
       <div className="bg-white rounded shadow-sm p-4">
@@ -11,9 +12,9 @@ export function BootstrapDestacados({destacados}) {
           Libros Destacados
         </h2>
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
-        {destacados.map((libro) => (
-          <BootstrapBookCard key={libro.id} {...libro} />
-        ))}
+          {libros.map((libro) => (
+            <BootstrapBookCard key={libro.id} {...libro} />
+          ))}
         </div>
       </div>
     </>
