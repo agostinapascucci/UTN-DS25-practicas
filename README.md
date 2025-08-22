@@ -30,7 +30,8 @@ Subcarpetas:
   Versión de la librería de componentes construida con el framework **Bootstrap** para darle estilo y coherencia visual.  
   Se integran componentes estilizados (botones, formularios, tarjetas, etc.) listos para ser usados en aplicaciones React.
   Se implementan con Express.js APIs Rest.
-  - **`libreria+persistencia/`**  
+  
+- **`libreria+persistencia/`**  
   Evolución del ejercicio anterior, agregando **persistencia de datos**.  
   Se implementa Prisma con PostgreSQL.
 
