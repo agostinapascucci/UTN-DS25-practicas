@@ -4,7 +4,6 @@ import InicioPage from "./pages/InicioPage"
 import NuevoLibroPage from "./pages/NuevoLibroPage"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./bootstrap-custom.css"
-import { supabase } from "./utils/supabase"
 
 function App() {
   const [libros, setLibros] = useState([])
@@ -12,20 +11,18 @@ function App() {
   const [error, setError] = useState(null)
 
   const cargarLibros = useCallback(async () => {
+    setCargando(true)
+    setError(null)
     try {
-      setCargando(true)
-      setError(null)
-
-      const { data, error } = await supabase
-        .from("Book")             
-        .select("id, title, author, genre, imageUrl, price, createdAt")
-
-      if (error) throw error
-      
-      setLibros(data || [])
-    } catch (err) {
-      console.error("Error al obtener libros:", err)
-      setError(err.message ?? "Error al obtener libros")
+      const res = await fetch("http://localhost:3000/api/books")
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const json = await res.json()
+      // Soporta tanto [] como { data: [] }
+      const lista = Array.isArray(json) ? json : (json?.books ?? [])
+      setLibros(lista)
+    } catch (e) {
+      setError(e.message || "Error al obtener libros")
+      setLibros([])
     } finally {
       setCargando(false)
     }
@@ -35,40 +32,15 @@ function App() {
     cargarLibros()
   }, [cargarLibros])
 
-  useEffect(() => {
-    const channel = supabase
-      .channel("book-changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "Book" },
-        () => cargarLibros()
-      )
-      .subscribe()
-
-    return () => {
-      supabase.removeChannel(channel)
-    }
-  }, [cargarLibros])
-
   return (
     <Routes>
       <Route
         path="/"
-        element={
-          <InicioPage
-            libros={libros}
-            cargando={cargando}
-            error={error}
-          />
-        }
+        element={<InicioPage libros={libros} cargando={cargando} error={error} />}
       />
       <Route
         path="/agregar"
-        element={
-          <NuevoLibroPage
-            cargarLibros={cargarLibros}
-          />
-        }
+        element={<NuevoLibroPage cargarLibros={cargarLibros} />}
       />
     </Routes>
   )

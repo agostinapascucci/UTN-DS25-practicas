@@ -9,12 +9,27 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model Author {
+  id          Int    @id @default(autoincrement())
+  name        String
+  nationality String
+  books       Book[]
+}
+
 model Book {
   id        Int      @id @default(autoincrement())
   title     String
-  author    String
+  authorId  Int
   price     Float
   imageUrl  String
-  genre     String
+  genre     Genre
   createdAt DateTime @default(now())
+  author    Author   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+}
+
+enum Genre {
+  Ciencia_Ficcion
+  Fantasia
+  Desarrollo_Personal
+  Novela_Historica
 }

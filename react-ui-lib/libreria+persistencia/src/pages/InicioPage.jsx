@@ -21,7 +21,7 @@ function Resultados({ libros, genero }) {
                     {libro.genre}
                   </h6>
                   <p className="card-text">
-                    <strong>Autor:</strong> {libro.author}
+                    <strong>Autor:</strong> {libro.author?.name ?? "—"}
                   </p>
                 </div>
               </div>

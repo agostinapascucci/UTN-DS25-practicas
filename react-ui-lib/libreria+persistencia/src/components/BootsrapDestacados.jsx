@@ -13,7 +13,8 @@ export function BootstrapDestacados({ destacados }) {
         </h2>
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
           {libros.map((libro) => (
-            <BootstrapBookCard key={libro.id} {...libro} />
+            <BootstrapBookCard key={libro.id} title={libro.title} author={libro.author.name} 
+            imageUrl={libro.imageUrl} genre={libro.genre} price={libro.price} />
           ))}
         </div>
       </div>

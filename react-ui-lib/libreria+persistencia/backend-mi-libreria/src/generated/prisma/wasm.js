@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.14.0
- * Query Engine version: 717184b7b35ea05dfa71a3236b7af656013e1e49
+ * Prisma Client JS version: 6.15.0
+ * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
  */
 Prisma.prismaVersion = {
-  client: "6.14.0",
-  engine: "717184b7b35ea05dfa71a3236b7af656013e1e49"
+  client: "6.15.0",
+  engine: "85179d7826409ee107a6ba334b5e305ae3fba9fb"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -120,10 +120,16 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.AuthorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  nationality: 'nationality'
+};
+
 exports.Prisma.BookScalarFieldEnum = {
   id: 'id',
   title: 'title',
-  author: 'author',
+  authorId: 'authorId',
   price: 'price',
   imageUrl: 'imageUrl',
   genre: 'genre',
@@ -139,9 +145,15 @@ exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 };
-
+exports.Genre = exports.$Enums.Genre = {
+  Ciencia_Ficcion: 'Ciencia_Ficcion',
+  Fantasia: 'Fantasia',
+  Desarrollo_Personal: 'Desarrollo_Personal',
+  Novela_Historica: 'Novela_Historica'
+};
 
 exports.Prisma.ModelName = {
+  Author: 'Author',
   Book: 'Book'
 };
 
