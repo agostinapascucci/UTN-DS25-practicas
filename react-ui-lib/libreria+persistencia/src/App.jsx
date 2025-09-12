@@ -1,47 +1,39 @@
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 import InicioPage from "./pages/InicioPage"
 import NuevoLibroPage from "./pages/NuevoLibroPage"
+import LoginPage from "./pages/LoginPage"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./bootstrap-custom.css"
+import { getToken } from "./helpers/auth"
+
+function RequireAuth() {
+  const location = useLocation();
+  const token = getToken();
+  if (!token) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+  return <Outlet />;
+}
 
 function App() {
-  const [libros, setLibros] = useState([])
-  const [cargando, setCargando] = useState(true)
-  const [error, setError] = useState(null)
-
-  const cargarLibros = useCallback(async () => {
-    setCargando(true)
-    setError(null)
-    try {
-      const res = await fetch("http://localhost:3000/api/books")
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const json = await res.json()
-      // Soporta tanto [] como { data: [] }
-      const lista = Array.isArray(json) ? json : (json?.books ?? [])
-      setLibros(lista)
-    } catch (e) {
-      setError(e.message || "Error al obtener libros")
-      setLibros([])
-    } finally {
-      setCargando(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    cargarLibros()
-  }, [cargarLibros])
-
   return (
     <Routes>
       <Route
-        path="/"
-        element={<InicioPage libros={libros} cargando={cargando} error={error} />}
-      />
-      <Route
-        path="/agregar"
-        element={<NuevoLibroPage cargarLibros={cargarLibros} />}
-      />
+        path="/login"
+        element={<LoginPage/>}
+      ></Route>
+      <Route element={<RequireAuth/>}>
+        <Route
+          path="/"
+          element={<InicioPage/>}
+        />
+        <Route
+          path="/agregar"
+          element={<NuevoLibroPage/>}
+        />
+      </Route>
+      <Route path="*" element={<Navigate to="/" replace/>}/>
     </Routes>
   )
 }

@@ -48,6 +48,12 @@ body {
   box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
 }
 
+.eliminar {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  margin-left: 0.5rem;
+}
+
 
 footer a:hover {
   text-decoration: underline !important;

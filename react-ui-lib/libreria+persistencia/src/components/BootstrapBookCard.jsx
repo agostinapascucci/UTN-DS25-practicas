@@ -1,4 +1,24 @@
-export function BootstrapBookCard({ id, title, author, imageUrl, genre, price }) {
+export function BootstrapBookCard({ id, title, author, imageUrl, genre, price, onDelete }) {
+  const handleDelete = async () => {
+    if (!window.confirm(`¿Seguro deseas eliminar este libro "${title}"?`)) return;
+    try {
+      const res = await fetch(`http://localhost:3000/api/books/${id}`, {
+        method: "DELETE"
+      });
+      if (!res.ok) {
+       const msg = await res.text();
+       throw new Error(msg | `Error HTTP ${res.status}`);  
+      }
+      console.log("Libro Eliminado: ", id);
+      if (typeof onDelete === "function") {
+        onDelete(id);
+      }
+    }  catch(error) {
+      console.error("Error eliminando libro: ", error);
+      alert("No se pudo eliminar el libro.");
+    }
+  };
+
   return (
     <div className="col">
       <div className="card h-100 shadow-sm border-0 book-card">
@@ -34,6 +54,10 @@ export function BootstrapBookCard({ id, title, author, imageUrl, genre, price })
             <button className="btn btn-primary btn-sm">
               <i className="bi bi-cart-plus me-1"></i>
               Agregar
+            </button>
+            <button className="btn btn-primary btn-sm eliminar"
+            onClick={handleDelete}>
+              <i className="bi bi-trash"></i>
             </button>
           </div>
         </div>

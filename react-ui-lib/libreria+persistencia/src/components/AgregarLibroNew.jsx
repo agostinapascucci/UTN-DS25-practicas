@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const API_BASE = "http://localhost:3000/api";
 
-export function NuevoLibro({ cargarLibros }) {
+export function NuevoLibro() {
   // --------- estado del libro ----------
   const [formData, setFormData] = useState({
     title: "",
@@ -36,19 +36,19 @@ export function NuevoLibro({ cargarLibros }) {
 
   const canSubmit = useMemo(() => {
     const hasBookCore =
-      formData.title.trim() !== "" &&
-      formData.genre.trim() !== "" &&
-      String(formData.price).trim() !== "";
+      formData.title.trim() &&
+      formData.genre.trim() &&
+      String(formData.price).trim();
     const hasAuthor =
       selectedAuthor?.id ||
       (showCreateAuthor && newAuthor.name.trim() !== "" && newAuthor.nationality.trim() !== "");
-    return hasBookCore && hasAuthor && !loading;
+    return Boolean(hasBookCore && hasAuthor && !loading);
   }, [formData, selectedAuthor, showCreateAuthor, newAuthor, loading]);
 
   // --------- búsqueda de autores con debounce ----------
   useEffect(() => {
     const term = authorSearch.trim();
-    if (!term) {
+    if (term.length < 2 || showCreateAuthor || selectedAuthor) {
       setAuthorResults([]);
       return;
     }
@@ -67,8 +67,8 @@ export function NuevoLibro({ cargarLibros }) {
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
-        // se espera { success, authors: [...] }
-        const list = Array.isArray(json?.authors) ? json.authors : [];
+        // se espera { success, data: [...] }
+        const list = Array.isArray(json?.data) ? json.data : [];
         setAuthorResults(list);
       } catch (err) {
         if (err.name !== "AbortError") {

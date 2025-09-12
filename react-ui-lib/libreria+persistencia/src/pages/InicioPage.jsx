@@ -2,6 +2,8 @@ import { BootstrapLayout } from "../components/BootstrapLayout";
 import { SearchBar } from "../components/BoostrapBusqueda";
 import { BootstrapDestacados } from "../components/BootsrapDestacados";
 import { useState } from "react";
+import { useFetch } from "../hooks/useFetch";
+
 
 function Resultados({ libros, genero }) {
   // Accede directamente al array de libros
@@ -35,12 +37,15 @@ function Resultados({ libros, genero }) {
   );
 }
 
-function InicioPage({ libros, cargando, error }) {
+function InicioPage() {
+  const url = "http://localhost:3000/api/books";
+  const { data, loading, error } = useFetch(url, {}, { requireAuth: true })
+
   const [generoBuscado, setGeneroBuscado] = useState("");
   const [resultados, setResultados] = useState([]);
 
   // Accede al array de libros desde la propiedad books
-  const librosArray = Array.isArray(libros) ? libros : [];
+  const librosArray = data?.books || [];
 
   const buscarPorGenero = (generoInput) => {
     const genero = (generoInput ?? "").trim().toLowerCase();
@@ -58,8 +63,8 @@ function InicioPage({ libros, cargando, error }) {
     setResultados(encontrados);
   };
 
-  if (cargando) {
-    return <BootstrapLayout tituloSeccion="Libros" destacados={<p>Cargando…</p>} />;
+  if (loading) {
+    return <BootstrapLayout tituloSeccion="Libros" destacados={<p>Cargando…</p>}/>;
   }
   if (error) {
     return (

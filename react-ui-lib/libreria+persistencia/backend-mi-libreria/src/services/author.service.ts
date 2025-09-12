@@ -70,3 +70,21 @@ export async function deleteAuthor(id: number): Promise<Author> {
     throw error;
     }
 }
+
+export async function searchByName(term: string, { page, limit }: { page: number; limit: number }) {
+  const q = term.trim();
+  if (q.length < 2) return { authors: [], total: 0 };
+
+
+  const [authors, total] = await Promise.all([
+    prisma.author.findMany({
+      where: { name: { contains: q, mode: "insensitive" as const } },
+      skip: (page - 1) * limit,
+      take: limit,
+      select: { id: true, name: true, nationality: true },
+    }),
+    prisma.author.count({ where: { name: { contains: q, mode: "insensitive" as const } } }),
+  ]);
+
+  return { authors, total };
+}

@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { Role } from '../generated/prisma';
 
 export interface Author {
   id: number;

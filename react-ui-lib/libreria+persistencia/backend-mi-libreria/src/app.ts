@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { authRoutes } from './routes/auth.routes';
+import { userRoutes } from './routes/user.routes';
 import { bookRoutes } from './routes/book.routes';
 import { authorRoutes } from './routes/author.routes';
 import { logRequest } from './middlewares/logger.middleware';
@@ -16,8 +18,10 @@ const app = express();
 
 // Opciones de CORS
 const corsOptions = {
-  origin: "http://localhost:5174",
-  credentials: true
+  origin: "http://localhost:5173",
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 } ;
 
 // Middlewares globales
@@ -26,6 +30,8 @@ app.use(express.json()); // Middleware para parsear JSON
 app.use(logRequest); // Middleware de logging
 
 // Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/books', bookRoutes); // Rutas de libros
 app.use('/api/authors', authorRoutes); // Rutas de autores
 
