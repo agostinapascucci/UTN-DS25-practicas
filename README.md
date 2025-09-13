@@ -39,7 +39,7 @@ Subcarpetas:
   Se implementan con Express.js APIs Rest.
   
 - **`libreria+persistencia/`**  
-  Evolución del ejercicio anterior, agregando **persistencia de datos**.  
+  Evolución del ejercicio anterior, agregando **persistencia de datos**, **validaciones con Zod** y **seguridad con JWT**.  
   Se implementa Prisma con PostgreSQL.
 
 ---
