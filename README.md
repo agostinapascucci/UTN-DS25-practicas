@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Ejercicios Practica FRONT-END
 ## Carpetas:
 **Carpeta HTML-CSS-JS:**[HTML-CSS-JS](https://github.com/agostinapascucci/UTN-DS25-practicas/tree/main/HTML-CSS-JS)
@@ -55,4 +55,4 @@ El repositorio busca documentar el progreso en el aprendizaje de:
 ---
 
 ✍️ **Autor:** Pascucci Agostina - Legajo: 33347
->>>>>>> 58ea3f8f9febfaaed123f895d6b6d47e75612a02
+
