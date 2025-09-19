@@ -1,8 +1,8 @@
-<<<<<<< HEAD
+
 # Ejercicios Practica FRONT-END
 ## Carpetas:
-**Carpeta HTML-CSS-JS:**[HTML-CSS-JS](https://github.com/agostinapascucci/UTN-DS25-practicas/tree/main/HTML-CSS-JS)
 
+**Carpeta HTML-CSS-JS:**[HTML-CSS-JS](https://github.com/agostinapascucci/UTN-DS25-practicas/tree/main/HTML-CSS-JS)
 **Carpeta React:**[react-ui-lib](https://github.com/agostinapascucci/UTN-DS25-practicas/tree/main/react-ui-lib)
 =======
 # Repositorio de Prácticas y Proyectos
@@ -39,7 +39,7 @@ Subcarpetas:
   Se implementan con Express.js APIs Rest.
   
 - **`libreria+persistencia/`**  
-  Evolución del ejercicio anterior, agregando **persistencia de datos**.  
+  Evolución del ejercicio anterior, agregando **persistencia de datos**, **validaciones con Zod** y **seguridad con JWT**.  
   Se implementa Prisma con PostgreSQL.
 
 ---
@@ -55,4 +55,4 @@ El repositorio busca documentar el progreso en el aprendizaje de:
 ---
 
 ✍️ **Autor:** Pascucci Agostina - Legajo: 33347
->>>>>>> 58ea3f8f9febfaaed123f895d6b6d47e75612a02
+
