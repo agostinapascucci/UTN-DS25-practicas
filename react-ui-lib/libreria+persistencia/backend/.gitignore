@@ -1,0 +1,23 @@
+# Node modules
+ node_modules/
+# Compilados de TypeScript
+ dist/
+# Logs
+ logs/
+ *.log
+ npm-debug.log*
+# Archivos temporales de sistema operativo / editor
+ .DS_Store
+ Thumbs.db
+ *.swp
+# Configuración de entorno (no se comparte)
+ .env
+# Archivos de desarrollo opcionales
+ *.local.*
+ *.tsbuildinfo
+# IDEs
+ .vscode/
+ .idea/
+
+ .env
+ C:\Users\USUARIO\OneDrive\Documentos\Ingeniería 3\Desarrollo De Software\UTN-DS25-practicas\react-ui-lib\libreria+persistencia\backend-mi-libreria\src\generated
