@@ -1,55 +1,67 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "../hooks/useFetch";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { bookSchema } from "../validations/bookSchema";
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
 
 export function NuevoLibro({ cargarLibros }) {
   const navigate = useNavigate();
   const { doFetch } = useFetch(null, {}, { requireAuth: true });
+  const doFetchRef = useRef(doFetch);
+  useEffect(() => {
+    doFetchRef.current = doFetch;
+  }, [doFetch]);
 
-  // --------- estado del libro ----------
-  const [formData, setFormData] = useState({
-    title: "",
-    genre: "",
-    imageUrl: "",
-    price: "",
+  // ---------------- RHF + YUP ----------------
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    clearErrors,
+    watch,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: yupResolver(bookSchema),
+    defaultValues: {
+      title: "",
+      genre: "",
+      imageUrl: "",
+      price: "",
+      authorId: null, // lo seteamos al seleccionar/crear autor
+    },
   });
 
-  // --------- estado de autor (búsqueda/selección/creación) ----------
+  // ---------------- autor: búsqueda / selección / creación ----------------
   const [authorSearch, setAuthorSearch] = useState("");
   const [authorResults, setAuthorResults] = useState([]);
   const [selectedAuthor, setSelectedAuthor] = useState(null); // { id, name, nationality }
   const [showCreateAuthor, setShowCreateAuthor] = useState(false);
   const [newAuthor, setNewAuthor] = useState({ name: "", nationality: "" });
 
-  // --------- estado general ----------
-  const [loading, setLoading] = useState(false);
+  // ---------------- estado general ----------------
   const [authorLoading, setAuthorLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // Para “última respuesta gana” en la búsqueda
+  const [errorGlobal, setErrorGlobal] = useState(null);
   const queryIdRef = useRef(0);
 
-  // --------- helpers ----------
-  const handleChange = (e) =>
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  // valores del formulario (para UI controlada si hace falta)
+  const genreValue = watch("genre");
 
+  // --------- helpers ----------
   const onChangeNewAuthor = (e) =>
     setNewAuthor((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const canSubmit = useMemo(() => {
-    const hasBookCore =
-      formData.title.trim() &&
-      formData.genre.trim() &&
-      String(formData.price).trim();
-    const hasAuthor =
-      selectedAuthor?.id ||
-      (showCreateAuthor &&
-        newAuthor.name.trim() !== "" &&
-        newAuthor.nationality.trim() !== "");
-    return Boolean(hasBookCore && hasAuthor && !loading);
-  }, [formData, selectedAuthor, showCreateAuthor, newAuthor, loading]);
+    // dejamos que RHF/yup maneje la mayoría, acá sólo evitamos submit si estamos creando autor y faltan campos
+    if (showCreateAuthor) {
+      return newAuthor.name.trim() !== "" && newAuthor.nationality.trim() !== "" && !authorLoading && !isSubmitting;
+    }
+    return !authorLoading && !isSubmitting;
+  }, [showCreateAuthor, newAuthor, authorLoading, isSubmitting]);
 
   // --------- búsqueda de autores con debounce ----------
   useEffect(() => {
@@ -62,11 +74,11 @@ export function NuevoLibro({ cargarLibros }) {
 
     const myId = ++queryIdRef.current;
     setAuthorLoading(true);
-    setError(null);
+    setErrorGlobal(null);
 
     const t = setTimeout(async () => {
       try {
-        const json = await doFetch(
+        const json = await doFetchRef.current(
           `${API_BASE}/authors?search=${encodeURIComponent(term)}`,
           { method: "GET" }
         );
@@ -83,7 +95,7 @@ export function NuevoLibro({ cargarLibros }) {
       } catch (err) {
         if (queryIdRef.current === myId) {
           console.error("Error buscando autores:", err);
-          setError(err?.message || "Error buscando autores");
+          setErrorGlobal(err?.message || "Error buscando autores");
           setAuthorResults([]);
         }
       } finally {
@@ -91,13 +103,10 @@ export function NuevoLibro({ cargarLibros }) {
           setAuthorLoading(false);
         }
       }
-    }, 300); // debounce 300ms
+    }, 300);
 
-    return () => {
-      clearTimeout(t);
-    };
-    // ⚠️ No incluimos doFetch en deps para evitar disparar el efecto en cada render.
-  }, [authorSearch, showCreateAuthor, selectedAuthor]); 
+    return () => clearTimeout(t);
+  }, [authorSearch, showCreateAuthor, selectedAuthor]);
 
   const selectAuthor = (author) => {
     setSelectedAuthor(author);
@@ -105,71 +114,76 @@ export function NuevoLibro({ cargarLibros }) {
     setNewAuthor({ name: "", nationality: "" });
     setAuthorResults([]);
     setAuthorSearch(author?.name || "");
+    setValue("authorId", author?.id ?? null);
+    clearErrors("authorId");
   };
 
   const resetSelectedAuthor = () => {
     setSelectedAuthor(null);
     setAuthorSearch("");
     setAuthorResults([]);
+    setValue("authorId", null);
   };
 
   const toggleCreateAuthor = () => {
     setShowCreateAuthor((s) => !s);
     setSelectedAuthor(null);
+    setAuthorSearch("");
+    setAuthorResults([]);
+    setValue("authorId", null);
+    if (!showCreateAuthor) {
+      // al abrir modo crear, limpiamos error de autor si lo hubiera
+      clearErrors("authorId");
+    }
   };
 
-  // --------- submit ----------
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    let authorId = selectedAuthor?.id || null;
+  // ---------------- submit ----------------
+  const onSubmit = async (data) => {
+    setErrorGlobal(null);
 
     try {
+      let authorId = data.authorId ?? null;
+
       // 1) crear autor si no hay seleccionado
       if (!authorId) {
         if (!showCreateAuthor) {
-          throw new Error("Seleccioná un autor o creá uno nuevo.");
+          setError("authorId", { type: "manual", message: "Seleccioná un autor o creá uno nuevo." });
+          throw new Error("Falta autor");
         }
+
         if (!newAuthor.name.trim() || !newAuthor.nationality.trim()) {
-          throw new Error("Completá nombre y nacionalidad del nuevo autor.");
+          setError("authorId", { type: "manual", message: "Completá nombre y nacionalidad del nuevo autor." });
+          throw new Error("Datos de autor incompletos");
         }
 
         setAuthorLoading(true);
-
-        const authorJson = await doFetch(`${API_BASE}/authors`, {
+        const authorJson = await doFetchRef.current(`${API_BASE}/authors`, {
           method: "POST",
-          body: JSON.stringify(newAuthor), // el hook setea Content-Type si falta
+          body: JSON.stringify(newAuthor),
         });
 
-        const createdAuthor =
-          authorJson?.data ?? authorJson?.author ?? authorJson;
-
+        const createdAuthor = authorJson?.data ?? authorJson?.author ?? authorJson;
         if (!createdAuthor?.id) {
           throw new Error("La API no devolvió el id del autor creado.");
         }
-
         authorId = createdAuthor.id;
         setSelectedAuthor(createdAuthor);
+        setValue("authorId", authorId);
+        clearErrors("authorId");
         setAuthorResults([]);
         setAuthorLoading(false);
       }
 
       // 2) crear libro
       const payload = {
-        title: formData.title.trim(),
+        title: data.title.trim(),
         authorId,
-        genre: formData.genre, // usar tus enums exactos
-        imageUrl: formData.imageUrl?.trim() || null,
-        price: Number(formData.price),
+        genre: data.genre,
+        imageUrl: data.imageUrl?.trim() || null,
+        price: Number(data.price),
       };
 
-      if (!payload.title) throw new Error("El título es obligatorio.");
-      if (!authorId) throw new Error("Falta seleccionar o crear el autor.");
-      if (Number.isNaN(payload.price)) throw new Error("Precio inválido.");
-
-      const bookJson = await doFetch(`${API_BASE}/books`, {
+      const bookJson = await doFetchRef.current(`${API_BASE}/books`, {
         method: "POST",
         body: JSON.stringify(payload),
       });
@@ -186,29 +200,33 @@ export function NuevoLibro({ cargarLibros }) {
         await cargarLibros();
       }
 
-      navigate("/");
+      reset();
+      navigate("/inicio");
     } catch (err) {
       console.error("Error guardando libro:", err);
-      setError(err?.message || "Ocurrió un error al guardar el libro.");
+      if (!errors.authorId) {
+        setErrorGlobal(err?.message || "Ocurrió un error al guardar el libro.");
+      }
     } finally {
-      setLoading(false);
+      setAuthorLoading(false);
     }
   };
 
-  // --------- UI ----------
+  // ---------------- UI ----------------
   return (
-    <form className="p-4 shadow bg-light rounded" onSubmit={handleSubmit}>
+    <form className="p-4 shadow bg-light rounded" onSubmit={handleSubmit(onSubmit)}>
+      <h3 className="mb-3">➕ Nuevo Libro</h3>
+
       {/* Título */}
       <div className="mb-3">
         <label className="form-label">Título</label>
         <input
           type="text"
-          name="title"
-          className="form-control"
-          value={formData.title}
-          onChange={handleChange}
-          required
+          className={`form-control ${errors.title ? "is-invalid" : ""}`}
+          placeholder="El nombre del libro"
+          {...register("title")}
         />
+        {errors.title && <div className="invalid-feedback">{errors.title.message}</div>}
       </div>
 
       {/* Autor: buscador + selección o creación */}
@@ -217,16 +235,15 @@ export function NuevoLibro({ cargarLibros }) {
           <span>Autor</span>
           <button
             type="button"
-            className={`btn btn-sm ${
-              showCreateAuthor ? "btn-outline-secondary" : "btn-link"
-            }`}
+            className={`btn btn-sm ${showCreateAuthor ? "btn-outline-secondary" : "btn-link"}`}
             onClick={toggleCreateAuthor}
           >
-            {showCreateAuthor
-              ? "Buscar autor existente"
-              : "¿No está? Crear nuevo autor"}
+            {showCreateAuthor ? "Buscar autor existente" : "¿No está? Crear nuevo autor"}
           </button>
         </label>
+
+        {/* campo oculto para RHF/yup */}
+        <input type="hidden" {...register("authorId")} />
 
         {!showCreateAuthor ? (
           <>
@@ -235,11 +252,7 @@ export function NuevoLibro({ cargarLibros }) {
                 <span className="badge bg-success">
                   {selectedAuthor.name} ({selectedAuthor.nationality || "—"})
                 </span>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-outline-danger"
-                  onClick={resetSelectedAuthor}
-                >
+                <button type="button" className="btn btn-sm btn-outline-danger" onClick={resetSelectedAuthor}>
                   Cambiar
                 </button>
               </div>
@@ -252,9 +265,7 @@ export function NuevoLibro({ cargarLibros }) {
                   value={authorSearch}
                   onChange={(e) => setAuthorSearch(e.target.value)}
                 />
-                {authorLoading && (
-                  <div className="form-text">Buscando autores…</div>
-                )}
+                {authorLoading && <div className="form-text">Buscando autores…</div>}
                 {!authorLoading && authorSearch.trim() && (
                   <ul className="list-group mt-2">
                     {authorResults.length > 0 ? (
@@ -271,15 +282,11 @@ export function NuevoLibro({ cargarLibros }) {
                               {a.nationality ? `· ${a.nationality}` : ""}
                             </small>
                           </span>
-                          <span className="badge bg-primary rounded-pill">
-                            Seleccionar
-                          </span>
+                          <span className="badge bg-primary rounded-pill">Seleccionar</span>
                         </li>
                       ))
                     ) : (
-                      <li className="list-group-item text-muted">
-                        Sin resultados
-                      </li>
+                      <li className="list-group-item text-muted">Sin resultados</li>
                     )}
                   </ul>
                 )}
@@ -296,7 +303,6 @@ export function NuevoLibro({ cargarLibros }) {
                 placeholder="Nombre del autor"
                 value={newAuthor.name}
                 onChange={onChangeNewAuthor}
-                required={showCreateAuthor}
               />
             </div>
             <div className="col-md-6">
@@ -307,24 +313,24 @@ export function NuevoLibro({ cargarLibros }) {
                 placeholder="Nacionalidad"
                 value={newAuthor.nationality}
                 onChange={onChangeNewAuthor}
-                required={showCreateAuthor}
               />
             </div>
+            <div className="form-text">Estos campos no pasan por yup; se validan antes de crear el autor.</div>
           </div>
         )}
+
+        {errors.authorId && <div className="text-danger mt-2">{errors.authorId.message}</div>}
       </div>
 
       {/* Género */}
       <div className="mb-3">
         <label className="form-label">Género</label>
         <select
-          name="genre"
-          id="genre"
-          className="form-control"
-          value={formData.genre}
-          onChange={handleChange}
-          required
+          className={`form-control ${errors.genre ? "is-invalid" : ""}`}
+          {...register("genre")}
+          defaultValue=""
         >
+
           <option value="" disabled>
             Seleccione un género
           </option>
@@ -333,6 +339,7 @@ export function NuevoLibro({ cargarLibros }) {
           <option value="Novela_Historica">Novela Histórica</option>
           <option value="Desarrollo_Personal">Desarrollo Personal</option>
         </select>
+        {errors.genre && <div className="invalid-feedback">{errors.genre.message}</div>}
       </div>
 
       {/* Imagen */}
@@ -340,12 +347,11 @@ export function NuevoLibro({ cargarLibros }) {
         <label className="form-label">Imagen (URL)</label>
         <input
           type="text"
-          name="imageUrl"
-          className="form-control"
-          value={formData.imageUrl}
-          onChange={handleChange}
+          className={`form-control ${errors.imageUrl ? "is-invalid" : ""}`}
           placeholder="https://..."
+          {...register("imageUrl")}
         />
+        {errors.imageUrl && <div className="invalid-feedback">{errors.imageUrl.message}</div>}
       </div>
 
       {/* Precio */}
@@ -353,22 +359,20 @@ export function NuevoLibro({ cargarLibros }) {
         <label className="form-label">Precio</label>
         <input
           type="number"
-          name="price"
-          className="form-control"
-          value={formData.price}
-          onChange={handleChange}
           step="0.01"
           min="0"
-          required
+          className={`form-control ${errors.price ? "is-invalid" : ""}`}
+          {...register("price")}
         />
+        {errors.price && <div className="invalid-feedback">{errors.price.message}</div>}
       </div>
 
-      {/* Errores */}
-      {error && <div className="alert alert-danger">{error}</div>}
+      {/* Errores globales */}
+      {errorGlobal && <div className="alert alert-danger">{errorGlobal}</div>}
 
       {/* Botón submit */}
       <button type="submit" className="btn btn-success" disabled={!canSubmit}>
-        {loading ? "Guardando..." : "Guardar Libro"}
+        {isSubmitting ? "Guardando..." : "Guardar Libro"}
       </button>
     </form>
   );

@@ -1,12 +1,11 @@
 import { BootstrapLayout } from "../components/BootstrapLayout";
 import { SearchBar } from "../components/BoostrapBusqueda";
 import { BootstrapDestacados } from "../components/BootsrapDestacados";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFetch } from "../hooks/useFetch";
 
 
 function Resultados({ libros, genero }) {
-  // Accede directamente al array de libros
   const librosArray = Array.isArray(libros) ? libros : [];
 
   return (
@@ -39,13 +38,17 @@ function Resultados({ libros, genero }) {
 
 function InicioPage() {
   const url = "http://localhost:3000/api/books";
-  const { data, loading, error } = useFetch(url, {}, { requireAuth: true })
+  const { data, loading, error } = useFetch(url, {}, { requireAuth: true });
 
   const [generoBuscado, setGeneroBuscado] = useState("");
   const [resultados, setResultados] = useState([]);
+  const [librosArray, setLibrosArray] = useState([]);
 
-  // Accede al array de libros desde la propiedad books
-  const librosArray = Array.isArray(data?.books) ? data.books : [];
+  // Actualiza librosArray cuando cambia data
+  useEffect(() => {
+    setLibrosArray(Array.isArray(data?.books) ? data.books : []);
+  }, [data]);
+
   const buscarPorGenero = (generoInput) => {
     const genero = (generoInput ?? "").trim().toLowerCase();
     setGeneroBuscado(genero);
@@ -62,6 +65,13 @@ function InicioPage() {
     setResultados(encontrados);
   };
 
+  // Esta función elimina el libro del estado local
+  const handleDeleteBook = (deletedId) => {
+    setLibrosArray(prev => prev.filter(libro => libro.id !== deletedId));
+    // Si hay resultados de búsqueda, también actualízalos
+    setResultados(prev => prev.filter(libro => libro.id !== deletedId));
+  };
+
   if (loading) {
     return <BootstrapLayout tituloSeccion="Libros" destacados={<p>Cargando…</p>}/>;
   }
@@ -74,8 +84,6 @@ function InicioPage() {
     );
   }
 
-  console.log("Libros destacados:", librosArray);
-
   return (
     <BootstrapLayout
       logo="https://img.freepik.com/vector-gratis/zapato-cristal-brillante-cenicienta_23-2148470395.jpg"
@@ -84,7 +92,9 @@ function InicioPage() {
       resultados={
         generoBuscado && <Resultados libros={resultados} genero={generoBuscado} />
       }
-      destacados={<BootstrapDestacados destacados={librosArray}/>}
+      destacados={
+        <BootstrapDestacados destacados={librosArray} onDelete={handleDeleteBook} />
+      }
     />
   );
 }

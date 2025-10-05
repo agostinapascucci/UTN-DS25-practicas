@@ -5,6 +5,7 @@ import NuevoLibroPage from "./pages/NuevoLibroPage"
 import LoginPage from "./pages/LoginPage"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./bootstrap-custom.css"
+import "./form.css"
 import { getToken } from "./helpers/auth"
 
 function RequireAuth() {
