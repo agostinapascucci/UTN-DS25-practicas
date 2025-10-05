@@ -4,6 +4,7 @@ import { useFetch } from "../hooks/useFetch";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { bookSchema } from "../validations/bookSchema";
+import { useAuth } from "../contexts/AuthContext";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
 
@@ -14,6 +15,12 @@ export function NuevoLibro({ cargarLibros }) {
   useEffect(() => {
     doFetchRef.current = doFetch;
   }, [doFetch]);
+
+  // --- CONTEXTO DE AUTENTICACIÓN ---
+  const { user, logout } = useAuth();
+
+  // Solo permite agregar libros si el usuario tiene rol 'ADMIN'
+  const isAdmin = user?.role === "ADMIN";
 
   // ---------------- RHF + YUP ----------------
   const {
@@ -32,7 +39,7 @@ export function NuevoLibro({ cargarLibros }) {
       genre: "",
       imageUrl: "",
       price: "",
-      authorId: null, // lo seteamos al seleccionar/crear autor
+      authorId: null,
     },
   });
 
@@ -214,166 +221,186 @@ export function NuevoLibro({ cargarLibros }) {
 
   // ---------------- UI ----------------
   return (
-    <form className="p-4 shadow bg-light rounded" onSubmit={handleSubmit(onSubmit)}>
-      <h3 className="mb-3">➕ Nuevo Libro</h3>
-
-      {/* Título */}
-      <div className="mb-3">
-        <label className="form-label">Título</label>
-        <input
-          type="text"
-          className={`form-control ${errors.title ? "is-invalid" : ""}`}
-          placeholder="El nombre del libro"
-          {...register("title")}
-        />
-        {errors.title && <div className="invalid-feedback">{errors.title.message}</div>}
-      </div>
-
-      {/* Autor: buscador + selección o creación */}
-      <div className="mb-3">
-        <label className="form-label d-flex align-items-center justify-content-between">
-          <span>Autor</span>
-          <button
-            type="button"
-            className={`btn btn-sm ${showCreateAuthor ? "btn-outline-secondary" : "btn-link"}`}
-            onClick={toggleCreateAuthor}
-          >
-            {showCreateAuthor ? "Buscar autor existente" : "¿No está? Crear nuevo autor"}
+    <div>
+      {/* Mostrar usuario actual y botón de logout */}
+      {user && (
+        <div className="mb-3">
+          <span className="badge bg-info text-dark">
+            Sesión iniciada como: {user.name || user.email} ({user.role})
+          </span>
+          <button className="btn btn-sm btn-outline-danger ms-2" onClick={logout}>
+            Cerrar sesión
           </button>
-        </label>
+        </div>
+      )}
 
-        {/* campo oculto para RHF/yup */}
-        <input type="hidden" {...register("authorId")} />
+      {/* Validar rol ADMIN */}
+      {!isAdmin ? (
+        <div className="alert alert-warning">
+          Solo los usuarios con rol <strong>ADMIN</strong> pueden agregar libros.
+        </div>
+      ) : (
+        <form className="p-4 shadow bg-light rounded" onSubmit={handleSubmit(onSubmit)}>
+          <h3 className="mb-3">➕ Nuevo Libro</h3>
 
-        {!showCreateAuthor ? (
-          <>
-            {selectedAuthor ? (
-              <div className="d-flex align-items-center gap-2 mb-2">
-                <span className="badge bg-success">
-                  {selectedAuthor.name} ({selectedAuthor.nationality || "—"})
-                </span>
-                <button type="button" className="btn btn-sm btn-outline-danger" onClick={resetSelectedAuthor}>
-                  Cambiar
-                </button>
-              </div>
-            ) : (
+          {/* Título */}
+          <div className="mb-3">
+            <label className="form-label">Título</label>
+            <input
+              type="text"
+              className={`form-control ${errors.title ? "is-invalid" : ""}`}
+              placeholder="El nombre del libro"
+              {...register("title")}
+            />
+            {errors.title && <div className="invalid-feedback">{errors.title.message}</div>}
+          </div>
+
+          {/* Autor: buscador + selección o creación */}
+          <div className="mb-3">
+            <label className="form-label d-flex align-items-center justify-content-between">
+              <span>Autor</span>
+              <button
+                type="button"
+                className={`btn btn-sm ${showCreateAuthor ? "btn-outline-secondary" : "btn-link"}`}
+                onClick={toggleCreateAuthor}
+              >
+                {showCreateAuthor ? "Buscar autor existente" : "¿No está? Crear nuevo autor"}
+              </button>
+            </label>
+
+            {/* campo oculto para RHF/yup */}
+            <input type="hidden" {...register("authorId")} />
+
+            {!showCreateAuthor ? (
               <>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Buscar autor por nombre…"
-                  value={authorSearch}
-                  onChange={(e) => setAuthorSearch(e.target.value)}
-                />
-                {authorLoading && <div className="form-text">Buscando autores…</div>}
-                {!authorLoading && authorSearch.trim() && (
-                  <ul className="list-group mt-2">
-                    {authorResults.length > 0 ? (
-                      authorResults.map((a) => (
-                        <li
-                          key={a.id}
-                          className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                          role="button"
-                          onClick={() => selectAuthor(a)}
-                        >
-                          <span>
-                            {a.name}{" "}
-                            <small className="text-muted">
-                              {a.nationality ? `· ${a.nationality}` : ""}
-                            </small>
-                          </span>
-                          <span className="badge bg-primary rounded-pill">Seleccionar</span>
-                        </li>
-                      ))
-                    ) : (
-                      <li className="list-group-item text-muted">Sin resultados</li>
+                {selectedAuthor ? (
+                  <div className="d-flex align-items-center gap-2 mb-2">
+                    <span className="badge bg-success">
+                      {selectedAuthor.name} ({selectedAuthor.nationality || "—"})
+                    </span>
+                    <button type="button" className="btn btn-sm btn-outline-danger" onClick={resetSelectedAuthor}>
+                      Cambiar
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar autor por nombre…"
+                      value={authorSearch}
+                      onChange={(e) => setAuthorSearch(e.target.value)}
+                    />
+                    {authorLoading && <div className="form-text">Buscando autores…</div>}
+                    {!authorLoading && authorSearch.trim() && (
+                      <ul className="list-group mt-2">
+                        {authorResults.length > 0 ? (
+                          authorResults.map((a) => (
+                            <li
+                              key={a.id}
+                              className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                              role="button"
+                              onClick={() => selectAuthor(a)}
+                            >
+                              <span>
+                                {a.name}{" "}
+                                <small className="text-muted">
+                                  {a.nationality ? `· ${a.nationality}` : ""}
+                                </small>
+                              </span>
+                              <span className="badge bg-primary rounded-pill">Seleccionar</span>
+                            </li>
+                          ))
+                        ) : (
+                          <li className="list-group-item text-muted">Sin resultados</li>
+                        )}
+                      </ul>
                     )}
-                  </ul>
+                  </>
                 )}
               </>
+            ) : (
+              <div className="row g-2">
+                <div className="col-md-6">
+                  <input
+                    type="text"
+                    name="name"
+                    className="form-control"
+                    placeholder="Nombre del autor"
+                    value={newAuthor.name}
+                    onChange={onChangeNewAuthor}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <input
+                    type="text"
+                    name="nationality"
+                    className="form-control"
+                    placeholder="Nacionalidad"
+                    value={newAuthor.nationality}
+                    onChange={onChangeNewAuthor}
+                  />
+                </div>
+                <div className="form-text">Estos campos no pasan por yup; se validan antes de crear el autor.</div>
+              </div>
             )}
-          </>
-        ) : (
-          <div className="row g-2">
-            <div className="col-md-6">
-              <input
-                type="text"
-                name="name"
-                className="form-control"
-                placeholder="Nombre del autor"
-                value={newAuthor.name}
-                onChange={onChangeNewAuthor}
-              />
-            </div>
-            <div className="col-md-6">
-              <input
-                type="text"
-                name="nationality"
-                className="form-control"
-                placeholder="Nacionalidad"
-                value={newAuthor.nationality}
-                onChange={onChangeNewAuthor}
-              />
-            </div>
-            <div className="form-text">Estos campos no pasan por yup; se validan antes de crear el autor.</div>
+
+            {errors.authorId && <div className="text-danger mt-2">{errors.authorId.message}</div>}
           </div>
-        )}
 
-        {errors.authorId && <div className="text-danger mt-2">{errors.authorId.message}</div>}
-      </div>
+          {/* Género */}
+          <div className="mb-3">
+            <label className="form-label">Género</label>
+            <select
+              className={`form-control ${errors.genre ? "is-invalid" : ""}`}
+              {...register("genre")}
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Seleccione un género
+              </option>
+              <option value="Fantasia">Fantasía</option>
+              <option value="Ciencia_Ficcion">Ciencia Ficción</option>
+              <option value="Novela_Historica">Novela Histórica</option>
+              <option value="Desarrollo_Personal">Desarrollo Personal</option>
+            </select>
+            {errors.genre && <div className="invalid-feedback">{errors.genre.message}</div>}
+          </div>
 
-      {/* Género */}
-      <div className="mb-3">
-        <label className="form-label">Género</label>
-        <select
-          className={`form-control ${errors.genre ? "is-invalid" : ""}`}
-          {...register("genre")}
-          defaultValue=""
-        >
+          {/* Imagen */}
+          <div className="mb-3">
+            <label className="form-label">Imagen (URL)</label>
+            <input
+              type="text"
+              className={`form-control ${errors.imageUrl ? "is-invalid" : ""}`}
+              placeholder="https://..."
+              {...register("imageUrl")}
+            />
+            {errors.imageUrl && <div className="invalid-feedback">{errors.imageUrl.message}</div>}
+          </div>
 
-          <option value="" disabled>
-            Seleccione un género
-          </option>
-          <option value="Fantasia">Fantasía</option>
-          <option value="Ciencia_Ficcion">Ciencia Ficción</option>
-          <option value="Novela_Historica">Novela Histórica</option>
-          <option value="Desarrollo_Personal">Desarrollo Personal</option>
-        </select>
-        {errors.genre && <div className="invalid-feedback">{errors.genre.message}</div>}
-      </div>
+          {/* Precio */}
+          <div className="mb-3">
+            <label className="form-label">Precio</label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              className={`form-control ${errors.price ? "is-invalid" : ""}`}
+              {...register("price")}
+            />
+            {errors.price && <div className="invalid-feedback">{errors.price.message}</div>}
+          </div>
 
-      {/* Imagen */}
-      <div className="mb-3">
-        <label className="form-label">Imagen (URL)</label>
-        <input
-          type="text"
-          className={`form-control ${errors.imageUrl ? "is-invalid" : ""}`}
-          placeholder="https://..."
-          {...register("imageUrl")}
-        />
-        {errors.imageUrl && <div className="invalid-feedback">{errors.imageUrl.message}</div>}
-      </div>
+          {/* Errores globales */}
+          {errorGlobal && <div className="alert alert-danger">{errorGlobal}</div>}
 
-      {/* Precio */}
-      <div className="mb-3">
-        <label className="form-label">Precio</label>
-        <input
-          type="number"
-          step="0.01"
-          min="0"
-          className={`form-control ${errors.price ? "is-invalid" : ""}`}
-          {...register("price")}
-        />
-        {errors.price && <div className="invalid-feedback">{errors.price.message}</div>}
-      </div>
-
-      {/* Errores globales */}
-      {errorGlobal && <div className="alert alert-danger">{errorGlobal}</div>}
-
-      {/* Botón submit */}
-      <button type="submit" className="btn btn-success" disabled={!canSubmit}>
-        {isSubmitting ? "Guardando..." : "Guardar Libro"}
-      </button>
-    </form>
+          {/* Botón submit */}
+          <button type="submit" className="btn btn-success" disabled={!canSubmit}>
+            {isSubmitting ? "Guardando..." : "Guardar Libro"}
+          </button>
+        </form>
+      )}
+    </div>
   );
 }

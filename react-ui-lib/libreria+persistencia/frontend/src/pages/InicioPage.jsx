@@ -37,6 +37,7 @@ function Resultados({ libros, genero }) {
 }
 
 function InicioPage() {
+
   const url = "http://localhost:3000/api/books";
   const { data, loading, error } = useFetch(url, {}, { requireAuth: true });
 

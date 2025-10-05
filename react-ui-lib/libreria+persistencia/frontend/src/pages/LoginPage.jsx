@@ -4,9 +4,13 @@ import { setToken } from "../helpers/auth";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from "../validations/loginSchema";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function LoginPage() {
    const navigate = useNavigate();
+   const { login } = useAuth(); // Usar el contexto de autenticación
+   const [ serverError, setServerError ] = useState(null);
+
    const { 
     register, 
     handleSubmit: handleFormSubmit, 
@@ -15,25 +19,19 @@ export default function LoginPage() {
     resolver: yupResolver(loginSchema)
    });
 
-   async function onSubmit(data) {
-    try {
-      const res = await fetch("http://localhost:3000/api/auth/login" , {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-      });
-      if (!res.ok) throw new Error("Error en login");
-      const { data: resData } = await res.json();
-      setToken(resData.token);
+   const onSubmit = async (data) => {
+    setServerError(""); // Limpiar errores previos
+
+    // Context login
+    const result = await login(data.email, data.password);
+    if (result.success) {
       navigate("/inicio");
     }
-    catch (err) {
-      console.error(err);
-      setError("root", {
-        type: "manual",
-        message: err?.message || "Login Fallido" });
+    else {
+      setServerError(result.message);
     }
-  }
+  };
+
 
   return (
   
@@ -42,7 +40,7 @@ export default function LoginPage() {
           <div className="col-12 col-sm-10 col-md-6 col-lg-4">
             <form onSubmit={handleFormSubmit(onSubmit)} className="card p-4 shadow-sm">
               <h2 className="mb-3">Login</h2>
-
+              {serverError && <div className="alert alert-danger" role="alert">{serverError}</div>}
               <div className="mb-3">
                 <label className="form-label">Email</label>
                 <input 
