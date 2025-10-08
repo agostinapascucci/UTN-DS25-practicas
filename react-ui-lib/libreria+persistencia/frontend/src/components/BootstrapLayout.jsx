@@ -65,7 +65,7 @@ export function BootstrapLayout ({
               {/*Catalogo solo si esta autenticado*/}
               {isAuthenticated && (
                  <li className="nav-item">
-                <Link className="nav-link fw-semibold px-3" to="/">
+                <Link className="nav-link fw-semibold px-3" to="/inicio">
                   <i className="bi bi-house-door me-1"></i>Inicio
                 </Link>
               </li>

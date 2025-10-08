@@ -6,9 +6,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { bookSchema } from "../validations/bookSchema";
 import { useAuth } from "../contexts/AuthContext";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+
 
 export function NuevoLibro({ cargarLibros }) {
+
+  const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const { doFetch } = useFetch(null, {}, { requireAuth: true });
   const doFetchRef = useRef(doFetch);
@@ -86,7 +88,7 @@ export function NuevoLibro({ cargarLibros }) {
     const t = setTimeout(async () => {
       try {
         const json = await doFetchRef.current(
-          `${API_BASE}/authors?search=${encodeURIComponent(term)}`,
+          `${API_URL}/api/authors?search=${encodeURIComponent(term)}`,
           { method: "GET" }
         );
 
@@ -164,7 +166,7 @@ export function NuevoLibro({ cargarLibros }) {
         }
 
         setAuthorLoading(true);
-        const authorJson = await doFetchRef.current(`${API_BASE}/authors`, {
+        const authorJson = await doFetchRef.current(`${API_URL}/api/authors`, {
           method: "POST",
           body: JSON.stringify(newAuthor),
         });
@@ -190,7 +192,7 @@ export function NuevoLibro({ cargarLibros }) {
         price: Number(data.price),
       };
 
-      const bookJson = await doFetchRef.current(`${API_BASE}/books`, {
+      const bookJson = await doFetchRef.current(`${API_URL}/api/books`, {
         method: "POST",
         body: JSON.stringify(payload),
       });

@@ -38,8 +38,9 @@ function Resultados({ libros, genero }) {
 
 function InicioPage() {
 
-  const url = "http://localhost:3000/api/books";
-  const { data, loading, error } = useFetch(url, {}, { requireAuth: true });
+  
+  const API_URL = import.meta.env.VITE_API_URL;
+  const { data, loading, error } = useFetch( `${API_URL}/api/books`, {}, { requireAuth: true });
 
   const [generoBuscado, setGeneroBuscado] = useState("");
   const [resultados, setResultados] = useState([]);

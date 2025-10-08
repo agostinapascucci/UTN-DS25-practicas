@@ -1,11 +1,13 @@
 import { useFetch } from "../hooks/useFetch";
 export function BootstrapBookCard({ id, title, author, imageUrl, genre, price, onDelete }) {
+
+  const API_URL = import.meta.env.VITE_API_URL;
   const{doFetch, executing } = useFetch(null, {}, {requireAuth: true});
 
   const handleDelete = async () => {
     if (!window.confirm(`¿Seguro deseas eliminar este libro "${title}"?`)) return;
     try {
-      await doFetch(`http://localhost:3000/api/books/${id}`,{
+      await doFetch(`${API_URL}/api/books/${id}`,{
         method: 'DELETE',
       })
       console.log("Libro Eliminado: ", id);
