@@ -19,7 +19,7 @@ const app = express();
 // Opciones de CORS
 const corsOptions = {
   origin: [ "http://localhost:5137",
-            process.env.FRONTEND_URL || "http://localhost:5137" ],
+            "https://utn-ds25-ejercicio-libreria-ui.vercel.app/"],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -41,6 +41,6 @@ app.use(handleError);
 
 // Iniciar el servidor
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running...`);
 });
 export default app; // Exportar la aplicación para pruebas o uso en otros módulos
