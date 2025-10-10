@@ -7,7 +7,9 @@ import { bookRoutes } from './routes/book.routes';
 import { authorRoutes } from './routes/author.routes';
 import { logRequest } from './middlewares/logger.middleware';
 import { handleError } from './middlewares/error.middleware';
+import prisma from '../src/config/prisma'; // Asegurarse de que la ruta es correcta
 import { json } from 'body-parser';
+import { error } from 'console';
 
 // Instanciar variables de entorno
 dotenv.config();
@@ -18,8 +20,7 @@ const app = express();
 
 // Opciones de CORS
 const corsOptions = {
-  origin: [ "http://localhost:5137",
-            "https://utn-ds25-ejercicio-libreria-ui.vercel.app"],
+origin: [ process.env.FRONTEND_URL_LOCAL || "http://localhost:5173", process.env.FRONTEND_URL_PROD || "https://utn-ds25-ejercicio-libreria-ui.vercel.app" ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -43,4 +44,14 @@ app.use(handleError);
 app.listen(PORT, () => {
   console.log(`Server is running...`);
 });
+
+app.get("/health/db", async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.status(200).send("Database OK ✅");
+  } catch (err) {
+    res.status(500).send(`Database error: ${(err as Error).message}`);
+  }
+});
+
 export default app; // Exportar la aplicación para pruebas o uso en otros módulos
