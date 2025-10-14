@@ -20,7 +20,7 @@ const app = express();
 
 // Opciones de CORS
 const corsOptions = {
-origin: [ process.env.FRONTEND_URL_LOCAL || "http://localhost:5173", process.env.FRONTEND_URL_PROD || "https://utn-ds25-ejercicio-libreria-ui.vercel.app" ],
+origin: [ process.env.FRONTEND_URL_LOCAL, process.env.FRONTEND_URL_PROD ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
