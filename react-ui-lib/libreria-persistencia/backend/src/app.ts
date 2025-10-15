@@ -7,12 +7,14 @@ import { bookRoutes } from './routes/book.routes';
 import { authorRoutes } from './routes/author.routes';
 import { logRequest } from './middlewares/logger.middleware';
 import { handleError } from './middlewares/error.middleware';
-import prisma from '../src/config/prisma'; // Asegurarse de que la ruta es correcta
+import { PrismaClient } from '@prisma/client';
 import { json } from 'body-parser';
 import { error } from 'console';
 
 // Instanciar variables de entorno
 dotenv.config();
+
+const prisma = new PrismaClient();
 
 // Puerto desde env ( con default 3000)
 const PORT = process.env.PORT || 3000;
