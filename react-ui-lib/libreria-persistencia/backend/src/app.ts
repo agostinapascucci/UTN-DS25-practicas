@@ -42,10 +42,6 @@ app.use('/api/authors', authorRoutes); // Rutas de autores
 // Error handling middleware
 app.use(handleError); 
 
-// Iniciar el servidor
-app.listen(PORT, () => {
-  console.log(`Server is running...`);
-});
 
 app.get("/health/db", async (req, res) => {
   try {

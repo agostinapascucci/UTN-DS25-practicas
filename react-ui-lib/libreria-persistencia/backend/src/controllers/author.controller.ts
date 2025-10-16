@@ -1,21 +1,42 @@
- import { Request, Response, NextFunction } from 'express';
- import * as authorService from '../services/author.service';
+import { Request, Response, NextFunction } from 'express';
+import * as authorService from '../services/author.service';
 import { success } from 'zod';
 import { ca } from 'zod/v4/locales/index.cjs';
 
-    export async function getAllAuthors(req: Request, res: Response, next: NextFunction) {
-        try {
-            const authors = await authorService.getAllAuthors();
-            res.json({
-            success: true,
-            data: authors,
-            total: authors.length
-            });
-        }
-        catch (error) {
-            next(error);
-        }   
+// author.controller.ts
+
+// ELIMINA las funciones getAllAuthors y searchAuthors y AÑADE esta:
+
+export async function findAuthors(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { search: searchTerm, page, limit } = res.locals.validatedData;
+
+    // Si hay un término de búsqueda, usamos la lógica de búsqueda
+    if (searchTerm && searchTerm.length >= 2) {
+
+      const { authors, total } = await authorService.searchByName(searchTerm.trim(), { page, limit });
+      
+      return res.json({
+        success: true,
+        data: authors,
+        total,
+        page,
+        limit
+      });
     }
+
+    // Si NO hay término de búsqueda, obtenemos todos los autores
+    const authors = await authorService.getAllAuthors();
+    return res.json({
+      success: true,
+      data: authors,
+      total: authors.length
+    });
+
+  } catch (error) {
+    next(error);
+  }
+}
 
     export async function getAuthorById(req: Request, res: Response, next: NextFunction) {
         try {
@@ -86,36 +107,6 @@ import { ca } from 'zod/v4/locales/index.cjs';
         }
     }
 
-    export async function searchAuthors(req: Request, res: Response, next: NextFunction) {
-        try {
-            const searchRaw = String(req.query.search ?? "");
-            const term = searchRaw.trim();
-            if (term.length < 2){
-                return res.json({
-                    success: true,
-                    data: [],
-                    total: 0,
-                    page: 1,
-                    limit: 10
-                });
-            }
-
-            const page = Math.max(1, Number(req.query.page) ?? 1);
-            const limit = Math.min(50, Math.max(1, Number(req.query.limit) ?? 10));
-
-            const { authors, total } = await authorService.searchByName(term, { page, limit });
-            res.json({
-                success: true,
-                data: authors,
-                total,
-                page,
-                limit
-            });
-        } catch (error) {
-            next(error);
-        }
-            
-
-    }    
+ 
 
 
