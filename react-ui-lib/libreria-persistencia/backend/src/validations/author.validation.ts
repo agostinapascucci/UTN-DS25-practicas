@@ -20,11 +20,11 @@ export const createAuthorSchema = z.object({
 export const updateAuthorSchema = createAuthorSchema.partial();
 
 export const deleteAuthorSchema = z.object({
-    id: positiveInt,
+    id: positiveInt(1, Number.MAX_SAFE_INTEGER),
 });
 
 export const getAuthorByIdSchema = z.object({
-    id: positiveInt,
+    id: positiveInt(1, Number.MAX_SAFE_INTEGER),
 });
 
 // Buscar autores por nombre

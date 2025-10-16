@@ -6,11 +6,9 @@ export const validate = (schema: ZodType<any>, source: Source = 'body') => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             // Validar y transformar los datos de la solicitud
-            const validatedData = await schema.parseAsync((req as any)[source]);
-
-
-            // Reemplazar el cuerpo de la solicitud con los datos validados
-            (req as any)[source] = validatedData;
+            const dataToValidate = (req as any)[source];
+            const validatedData = await schema.parseAsync(dataToValidate);
+            res.locals.validatedData = validatedData;
             next();
         } catch (error) {
             if (error instanceof ZodError) {

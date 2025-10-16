@@ -11,7 +11,8 @@ const router = Router();
     '/', 
     authenticate,
     authorize('ADMIN', 'USER'),
-    authorController.getAllAuthors);
+    validate(searchAuthorQuerySchema, 'query'),
+    authorController.findAuthors);
 
  // GET /api/authors/:id 
 router.get(
@@ -21,13 +22,13 @@ router.get(
     validate(getAuthorByIdSchema, 'params'), 
     authorController.getAuthorById);
 
-// GET /api/authors?search=brad&page=1&limit=10
-router.get(
-    '/', 
-    authenticate,
-    authorize('ADMIN', 'USER'),
-    validate(searchAuthorQuerySchema, 'query'), 
-    authorController.searchAuthors);
+// // GET /api/authors?search=brad&page=1&limit=10
+// router.get(
+//     '/', 
+//     authenticate,
+//     authorize('ADMIN', 'USER'),
+//     validate(searchAuthorQuerySchema, 'query'), 
+//     authorController.searchAuthors);
 
  // POST /api/authors
  router.post(
