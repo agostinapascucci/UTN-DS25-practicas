@@ -1,7 +1,6 @@
 import request from 'supertest';
 import app from '../app'; // Importa instancia de la aplicación Express
 import * as authorService from '../services/author.service'; // Importamos para poder mockearlo
-import * as authMiddleware from '../middlewares/auth.middleware'; // Importamos para mockear la autenticación
 import { NextFunction } from 'express';
 
 // --- Mocks ---
